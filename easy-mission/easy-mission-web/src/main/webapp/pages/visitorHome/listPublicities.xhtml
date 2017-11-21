@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<h:dataTable value="#{publicityBean.allPublicities}" var="p"
+				rendered="#{!publicityBean.showForm}" border="2">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="title" />
+					</f:facet>
+					<h:outputText value="#{p.title}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="title" />
+					</f:facet>
+					<h:commandButton action="#{publicityBean.doLike()}" value="like">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{publicityBean.publicitySelected}"></f:setPropertyActionListener>
+					</h:commandButton>
+					<h:commandButton action="#{publicityBean.doDisLike()}"
+						value="dislike">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{publicityBean.publicitySelected}"></f:setPropertyActionListener>
+					</h:commandButton>
+				</h:column>
+
+			</h:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template/template.xhtml">
+	<ui:define name="content">
+		<h:form>
+
+			<h:dataTable value="#{publicityBean.publicities}" var="p" border="2"
+				rendered="#{!publicityBean.showForm}">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="title" />
+					</f:facet>
+					<h:outputText value="#{p.title}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="description" />
+					</f:facet>
+					<h:outputText value="#{p.description}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="category" />
+					</f:facet>
+					<h:outputText value="#{p.publicityCategory}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value=" start date" />
+					</f:facet>
+					<h:outputText value="#{p.startDate}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="end date" />
+					</f:facet>
+					<h:outputText value="#{p.endDate}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="#" />
+					</f:facet>
+					<h:commandButton action="#{publicityBean.doSelect()}"
+						value="select">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{publicityBean.publicitySelected}" />
+					</h:commandButton>
+				</h:column>
+			</h:dataTable>
+			<h:commandButton action="#{publicityBean.doNew()}" value="NEW"
+				rendered="#{!publicityBean.showForm}" />
+			<h:panelGrid columns="2" rendered="#{publicityBean.showForm}">
+				<h:outputText value="title" />
+				<h:inputText value="#{publicityBean.publicitySelected.title}" />
+				<h:outputText value="desc" />
+				<h:inputText value="#{publicityBean.publicitySelected.description}" />
+				<h:outputText value="category" />
+				<h:selectOneMenu value="#{publicityBean.categorySelected}">
+					<f:selectItems value="#{publicityBean.categories}" />
+				</h:selectOneMenu>
+
+
+				<h:outputText value="start date" />
+				<h:inputText value="#{publicityBean.publicitySelected.startDate}">
+					<f:convertDateTime pattern="yyyy-MM-dd" />
+				</h:inputText>
+				<h:outputText value="end date" />
+				<h:inputText value="#{publicityBean.publicitySelected.endDate}">
+					<f:convertDateTime pattern="yyyy-MM-dd" />
+				</h:inputText>
+				<h:commandButton action="#{publicityBean.doSaveOrUpdate()}"
+					value="save or update" />
+				<h:commandButton action="#{publicityBean.doDelete()}" value="delete" />
+				<h:commandButton action="#{publicityBean.doCancel()}" value="cancel" />
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
