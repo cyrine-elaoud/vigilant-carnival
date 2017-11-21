@@ -8,12 +8,14 @@
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="content">
 		<h:form>
+			<h:panelGrid columns="2">
+				<p:chart type="pie" model="#{chartBean.pieModel1}"
+					style="width:400px;height:300px" />
+				<p:chart type="bar" model="#{chartBean.barModel}"
+					style="height:300px" />
 
-			<p:chart type="pie" model="#{chartBean.pieModel1}"
-				style="width:400px;height:300px" />
 
-			<p:chart type="bar" model="#{chartBean.barModel}"
-				style="height:300px" />
+			</h:panelGrid>
 		</h:form>
 	</ui:define>
 </ui:composition>

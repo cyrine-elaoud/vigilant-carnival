@@ -35,14 +35,20 @@ public class ChartBean implements Serializable {
 
 	private PieChartModel pieModel1;
 	private BarChartModel barModel;
+	private User user = new User();
 	private List<User> users = new ArrayList<>();
 
 	@PostConstruct
 	public void init() {
+		user = reportingServiceLocal.findMemberWithHighestNbPublicities();
 		users = userServiceLocal.findAll();
 		createBarModels();
 		createPieModel1();
 
+	}
+
+	private void createBarModels() {
+		createBarModel();
 	}
 
 	private void createPieModel1() {
@@ -61,65 +67,38 @@ public class ChartBean implements Serializable {
 		pieModel1.setLegendPosition("w");
 	}
 
-	private BarChartModel initBarModel(int id) {
+	private BarChartModel initBarModel() {
 		BarChartModel model = new BarChartModel();
-		List<Publicity> publicities = userServiceLocal.findPublicitiesByMember(id);
-		ChartSeries boys = new ChartSeries();
-		boys.setLabel("Boys");
-		boys.set("2004", 120);
-		boys.set("2005", 100);
-		boys.set("2006", 44);
-		boys.set("2007", 150);
-		boys.set("2008", 25);
-
-		ChartSeries girls = new ChartSeries();
-		girls.setLabel("Girls");
-		girls.set("2004", 52);
-		girls.set("2005", 60);
-		girls.set("2006", 110);
-		girls.set("2007", 135);
-		girls.set("2008", 120);
+		ChartSeries like = new ChartSeries();
+		like.setLabel("like");
+		ChartSeries dislike = new ChartSeries();
+		dislike.setLabel("dislike");
+		List<Publicity> publicities = userServiceLocal.findPublicitiesByMember(user.getId());
 
 		for (Publicity p : publicities) {
-			ChartSeries like = new ChartSeries();
-			like.setLabel("like");
 			like.set(p.getTitle(), reportingServiceLocal.findNbLikeByPublicity(p));
-
-			ChartSeries dislike = new ChartSeries();
-			dislike.setLabel("dislike");
 			dislike.set(p.getTitle(), reportingServiceLocal.findNbDisLikeByPublicity(p));
-
-			model.addSeries(like);
-			model.addSeries(dislike);
 		}
-		model.addSeries(boys);
-		model.addSeries(girls);
+
+		model.addSeries(like);
+		model.addSeries(dislike);
+
 		return model;
 	}
 
-	private void createBarModels() {
-		for (User u : users) {
-			if (u instanceof Member) {
-				createBarModel(u.getId());
-			}
-		}
+	private void createBarModel() {
+		barModel = initBarModel();
 
-	}
-
-	private void createBarModel(int id) {
-		User member = userServiceLocal.find(id);
-		barModel = initBarModel(id);
-
-		barModel.setTitle("Bar Chart for " + member.getName());
+		barModel.setTitle("Bar Chart of " + user.getName() + "'s publicities");
 		barModel.setLegendPosition("ne");
 
 		Axis xAxis = barModel.getAxis(AxisType.X);
 		xAxis.setLabel("publicity");
 
 		Axis yAxis = barModel.getAxis(AxisType.Y);
-		yAxis.setLabel("review");
+		yAxis.setLabel("nb like/dislike");
 		yAxis.setMin(0);
-		yAxis.setMax(200);
+		yAxis.setMax(50);
 	}
 
 	public ReportingServiceLocal getReportingServiceLocal() {
@@ -156,6 +135,14 @@ public class ChartBean implements Serializable {
 
 	public void setBarModel(BarChartModel barModel) {
 		this.barModel = barModel;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
